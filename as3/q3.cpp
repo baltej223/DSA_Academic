@@ -1,104 +1,71 @@
-#include <iostream>
-#include <string>
+#include<iostream>
+
 using namespace std;
+// balanced parenthesis
 
-class Stack {
-private:
-    int *arr;
-    int top;
-    int capacity;
+template <typename T>
+class Stack{
+  // The raw memory pointer one.
+  T *arr;
+  int top = -1;
+  int size;
 
-public:
-    Stack(int size) {
-        capacity = size;
-        arr = new int[capacity];
-        top = -1;
+  public:
+  Stack(int size){ 
+    this->size = size; 
+    arr = new T[size];
+  }
+
+  void push(T value){
+    if (top+1 == size){
+      cout << "Can't add more element that size in stack \n";
+      exit(1);
+      // return;
     }
+    arr[++top] = value;
+  }
 
-    ~Stack() {
-        delete[] arr;
+  T pop(){
+    if (top == -1){
+      cout << "Can't pop when there is nothing in stack";
     }
+    return arr[top--];
+  }
 
-    bool isEmpty() {
-        return top == -1;
-    }
+  T  get(){
+    return arr[top];
+  }
 
-    bool isFull() {
-        return top == capacity - 1;
-    }
+  bool isEmpty(){
+    return top+1 == 0 ? true : false;
+  }
 
-    void push(char value) {  
-        if(isFull()) {
-            cout << "Stack Overflow! Cannot push " << value << endl;
-            return;
-        }
-        arr[++top] = value;
-    }
-
-    char pop() {  
-        if(isEmpty()) {
-            cout << "Stack Underflow! Cannot pop from empty stack" << endl;
-            return '\0';  
-        }
-        return arr[top--];
-    }
-
-    char peek() {  
-        if(isEmpty()) {
-            cout << "Stack is empty!" << endl;
-            return '\0';
-        }
-        return arr[top];
-    }
-
-    void display() {
-        if(isEmpty()) {
-            cout << "Stack is empty!" << endl;
-            return;
-        }
-        cout << "Stack elements are: ";
-        for(int i = top; i >= 0; i--)
-            cout << (char)arr[i] << " ";  
-        cout << endl;
-    }
+  ~Stack(){
+    delete[] arr;
+  }
 };
 
-bool isBalanced(string expr) {
-    Stack s(expr.size());  
-    
-    for(char c : expr) {
-        if(c == '(' || c == '[' || c == '{') {
-            s.push(c);
-        }
-        else if(c == ')' || c == ']' || c == '}') {
-            if(s.isEmpty()) {  
-                return false;
-            }
-            
-            char top = s.peek();  
-            s.pop();
-            
-            if((c == ')' && top != '(') || 
-               (c == ']' && top != '[') || 
-               (c == '}' && top != '{')) {
-                return false;
-            }
-        }
-    }
-    
-    return s.isEmpty();  
-    
-}
 
-int main() {
-    string expression;
-    cout << "Enter an expression: ";
-    getline(cin, expression);
-    
-    if(isBalanced(expression))
-        cout << "Expression has balanced parentheses" << endl;
-    else
-        cout << "Expression has unbalanced parentheses" << endl;
-    
-    return 0;
+int main(){
+  string brackets = "{{}}}";
+  int size = brackets.length();
+  Stack<char> s(size);
+
+  string start = "{[(";
+  string end = "}])";
+
+  for (int i=0; i<brackets.length(); i++){
+    char current_bracker = brackets[i];
+    if (current_bracker == '{' || current_bracker == '(' || current_bracker==']')
+      s.push(current_bracker);
+
+    if (current_bracker == '}' || current_bracker == ')' || current_bracker == ']')
+      s.pop();
+  }
+  if (s.isEmpty()){
+    cout << "No problem";
+  } 
+  else {
+    cout << "Problem";
+  }
 }
